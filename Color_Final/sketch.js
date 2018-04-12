@@ -22,7 +22,7 @@ function setup() {
 
 function createNoiseList(){
     var pointList = [];
-    for (i = 0; i < 25 +1; i++) {
+    for (i = 0; i < 40 +1; i++) {
         append(pointList, random(0, 500));
     }
     return pointList;
@@ -85,7 +85,7 @@ function draw() {
         width = windowWidth;
         height = windowHeight;
         createCanvas(width, height);
-        curves = int(width/80);
+        curves = int(width/50);
     }
     
         
