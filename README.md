@@ -1,4 +1,4 @@
 # Color Theory Final Project 2018
-Being made in P5.js (this project is in progress)
+Being made in P5.js 
 
-See the project [here](https://acdaly.github.io/color-waves/Color-Final).
+See the project [here](https://acdaly.github.io/color-waves/Color_Final).
