@@ -37,9 +37,6 @@ function create2DNoiseList() {
         append(t, createNoiseList());
     }
 }
-
-//color 0 is the furthest color
-
 var color2 = {
     'r': 10,
     'g': 45,
@@ -47,37 +44,16 @@ var color2 = {
 }
 
 var color1 = {
-    'r': 180,
-    'g': 240,
-    'b': 220
-}
-
-var color0 = {
     'r': 224,
     'g': 140,
     'b': 163
 }
-
-var colorList = [color0, color1, color2]
 
 var twean = {
     'r': 0,
     'g': 0,
     'b': 0
 }
-
-function getTwean(c1, c2, z) {
-    twean.r = (c1.r + (c2.r - c1.r)* (z/waveLayers) + (noise(t[z][1]) *40)  );
-    twean.g = (c1.g + (c2.g - c1.g)* (z/waveLayers)  + (noise(t[z][1])*40) );
-    twean.b = (c1.b + (c2.b - c1.b)* (z/waveLayers)  + (noise(t[z][1])*40) );
-}
-
-// function getTwean(c1, c2, i, z) {
-//     console.log(i/(colorList.length-1));
-//     twean.r = (c1.r + (c2.r - c1.r)* (i/(colorList.length-1)) + (noise(t[z][1]) *40)  );
-//     twean.g = (c1.g + (c2.g - c1.g)* (i/(colorList.length-1))  + (noise(t[z][1])*40) );
-//     twean.b = (c1.b + (c2.b - c1.b)* (i/(colorList.length-1))  + (noise(t[z][1])*40) );
-// }
 
 
 
@@ -88,10 +64,10 @@ function fillColor(z){
     var saturation = 8 * (z);
     var brightness = 70 + (z*2.5);
     var hsbString='hsb('+str(hue)+','+str(saturation)+'%,'+str(brightness)+'%)';
-    var index = int(z*((colorList.length -1)/waveLayers));
-    
-    getTwean(color0, color2, z);
-    //getTwean(colorList[index], colorList[index+1], z);
+
+    twean.r = (color1.r + (color2.r - color1.r)* (z/waveLayers) + (noise(t[z][1]) *40)  );
+    twean.g = (color1.g + (color2.g - color1.g)* (z/waveLayers)  + (noise(t[z][1])*40) );
+    twean.b = (color1.b + (color2.b - color1.b)* (z/waveLayers)  + (noise(t[z][1])*40) );
 
     var rgbString='rgb('+int(twean.r)+','+int(twean.g)+','+int(twean.b) +')';
 
