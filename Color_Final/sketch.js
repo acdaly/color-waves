@@ -72,12 +72,12 @@ function getTwean(c1, c2, z) {
     twean.b = (c1.b + (c2.b - c1.b)* (z/waveLayers)  + (noise(t[z][1])*40) );
 }
 
-// function getTwean(c1, c2, i, z) {
-//     console.log(i/(colorList.length-1));
-//     twean.r = (c1.r + (c2.r - c1.r)* (i/(colorList.length-1)) + (noise(t[z][1]) *40)  );
-//     twean.g = (c1.g + (c2.g - c1.g)* (i/(colorList.length-1))  + (noise(t[z][1])*40) );
-//     twean.b = (c1.b + (c2.b - c1.b)* (i/(colorList.length-1))  + (noise(t[z][1])*40) );
-// }
+function getListTwean(c1, c2, i, z) {
+    console.log(i);
+    twean.r = (c1.r + (c2.r - c1.r)* (i/(colorList.length-1)) + (noise(t[z][1]) *40)  );
+    twean.g = (c1.g + (c2.g - c1.g)* (i/(colorList.length-1))  + (noise(t[z][1])*40) );
+    twean.b = (c1.b + (c2.b - c1.b)* (i/(colorList.length-1))  + (noise(t[z][1])*40) );
+}
 
 
 
@@ -89,9 +89,10 @@ function fillColor(z){
     var brightness = 70 + (z*2.5);
     var hsbString='hsb('+str(hue)+','+str(saturation)+'%,'+str(brightness)+'%)';
     var index = int(z*((colorList.length -1)/waveLayers));
-    
+    var progressIndex = z % 6;
     getTwean(color0, color2, z);
     //getTwean(colorList[index], colorList[index+1], z);
+    //getListTwean(colorList[index], colorList[index+1], progressIndex, z);
 
     var rgbString='rgb('+int(twean.r)+','+int(twean.g)+','+int(twean.b) +')';
 
