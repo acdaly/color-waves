@@ -1,10 +1,13 @@
 var width;
 var height;
 var curves;
-var waveLayers = 13;
+var waveLayers = 10;
 var t=[];
 var initialY;
 var skyColor;
+
+var backgroundYellow;
+var backgroundLightBlue;
 
 
 function setup() {
@@ -19,6 +22,8 @@ function setup() {
     create2DNoiseList();
     background(skyColor);
     console.log(curves +',' + t[0].length);
+    backgroundYellow = color(255, 240, 201)
+    backgroundLightBlue = color( 78, 210, 255)
     
 }
 
@@ -40,25 +45,70 @@ function create2DNoiseList() {
 
 //color 0 is the furthest color
 
-var color2 = {
+
+
+var colorBlue = {
+    //blue
     'r': 10,
     'g': 45,
     'b': 250
 }
 
-var color1 = {
-    'r': 180,
+var colorLightBlue = {
+    //light blue
+    'r': 178,
+    'g': 210,
+    'b': 255
+}
+
+var colorGreen = {
+     //dark green
+    'r': 50,
+    'g': 120,
+    'b': 200
+}
+
+var colorPurple = {
+    //purple
+    'r': 177,
+    'g': 135,
+    'b': 188
+}
+
+var colorOrange = {
+    // orange
+    'r': 249,
+    'g': 204,
+    'b': 164
+}
+
+var colorRed = {
+    //red
+    'r': 201,
+    'g': 92,
+    'b': 116
+}
+
+
+var colorTeal = {
+    //teal
+    'r': 76,
+    'g': 226,
+    'b': 239
+}
+
+var colorLightYellow = {
+    //teal
+    'r': 255,
     'g': 240,
-    'b': 220
+    'b': 201
 }
 
-var color0 = {
-    'r': 224,
-    'g': 140,
-    'b': 163
-}
 
-var colorList = [color0, color1, color2]
+
+var colorList = [colorGreen, colorTeal, colorLightBlue, colorBlue];
+
+//var colorList = [colorRed, colorOrange, colorLightYellow, colorLightBlue];
 
 var twean = {
     'r': 0,
@@ -73,10 +123,11 @@ function getTwean(c1, c2, z) {
 }
 
 function getListTwean(c1, c2, i, z) {
-    console.log(i);
-    twean.r = (c1.r + (c2.r - c1.r)* (i/(colorList.length-1)) + (noise(t[z][1]) *40)  );
-    twean.g = (c1.g + (c2.g - c1.g)* (i/(colorList.length-1))  + (noise(t[z][1])*40) );
-    twean.b = (c1.b + (c2.b - c1.b)* (i/(colorList.length-1))  + (noise(t[z][1])*40) );
+    var progress = i / (waveLayers/(colorList.length-1));
+    var noiseOffset = noise(t[z][1])*80 - 20;
+    twean.r = c1.r + (c2.r - c1.r)* progress + noiseOffset;
+    twean.g = c1.g + (c2.g - c1.g)* progress + noiseOffset;
+    twean.b = c1.b + (c2.b - c1.b)* progress + noiseOffset;
 }
 
 
@@ -88,14 +139,13 @@ function fillColor(z){
     var saturation = 8 * (z);
     var brightness = 70 + (z*2.5);
     var hsbString='hsb('+str(hue)+','+str(saturation)+'%,'+str(brightness)+'%)';
-    var index = int(z*((colorList.length -1)/waveLayers));
-    var progressIndex = z % 6;
-    getTwean(color0, color2, z);
-    //getTwean(colorList[index], colorList[index+1], z);
-    //getListTwean(colorList[index], colorList[index+1], progressIndex, z);
 
+    var index = int(z*((colorList.length -1)/waveLayers)); //index in colorList to get twean of
+    var progressIndex = z % (waveLayers/(colorList.length - 1));
+
+
+    getListTwean(colorList[index], colorList[index+1], progressIndex, z);
     var rgbString='rgb('+int(twean.r)+','+int(twean.g)+','+int(twean.b) +')';
-
     return color(rgbString);
 }
 
@@ -135,6 +185,16 @@ function drawOcean(){
     }
 }
 
+function drawBackgroundGradient(x, y, w, h, c1, c2){
+    //refrences code from https://p5js.org/examples/color-linear-gradient.html
+    for (var i = y; i <= y+h; i++) {
+      var inter = map(i, y, y+h, 0, 1);
+      var c = lerpColor(c1, c2, inter);
+      stroke(c);
+      line(x, i, x+w, i);
+    }
+}
+
 function draw() {
     if (width != windowWidth || height != windowHeight){
         width = windowWidth;
@@ -143,8 +203,9 @@ function draw() {
         curves = int(width/50);
     }
     
-        
+    
     background(skyColor);
     drawOcean();
+    drawBackgroundGradient(0, 0, 500, 500, skyColor, backgroundYellow);
     
 }
