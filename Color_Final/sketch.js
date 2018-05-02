@@ -11,6 +11,8 @@ var backgroundLightBlue;
 var backgroundBlue;
 
 
+
+
 function setup() {
     width = windowWidth;
     height = windowHeight;
@@ -21,11 +23,14 @@ function setup() {
     curves = int(width/50);
     skyColor = color(170, 240, 255);
     create2DNoiseList();
-    //background(skyColor);
+    
 
     backgroundYellow = color(255, 240, 201)
     backgroundLightBlue = color( 78, 210, 255)
     backgroundBlue = color(10, 45, 250);
+
+    backgroundSunset = [backgroundBlue, backgroundYellow];
+
     
 }
 
@@ -51,6 +56,14 @@ var colorBlue = {
     'g': 45,
     'b': 250
 }
+
+var colorSkyBlue = {
+    //light blue
+    'r': 170,
+    'g': 240,
+    'b': 255
+}
+
 
 var colorLightBlue = {
     //light blue
@@ -111,6 +124,9 @@ var sunsetColorList = [colorRed, colorOrange, colorLightYellow, colorLightBlue];
 var twoDColorLists = [dayColorList, sunsetColorList];
 var colorList = [colorGreen, colorTeal, colorLightBlue, colorBlue];
 
+var backgroundList = [colorLightBlue, colorSkyBlue];
+var twoDBackgroundList = [[colorLightBlue, colorSkyBlue], [colorBlue, colorLightYellow]];
+
 function getTwean(c1, c2, progress, z) {
     //progress is 0 to 1
     var twean = {
@@ -126,7 +142,7 @@ function getTwean(c1, c2, progress, z) {
     return twean;
 }
 
-function getListTwean(c1, c2, progress, z) {
+function getListTwean(c1, c2, progress) {
     //progress is 0 to 1
     var twean = {
     'r': 0,
@@ -135,26 +151,31 @@ function getListTwean(c1, c2, progress, z) {
 }
     
     twean.r = c1.r + (c2.r - c1.r)* progress;
-
     twean.g = c1.g + (c2.g - c1.g)* progress;
     twean.b = c1.b + (c2.b - c1.b)* progress;
     return twean;
 }
 
 function updateList(progress, timeIndex) {
-    //console.log(twoDColorLists);
+    console.log(backgroundList);
+
+    if (timeIndex == twoDBackgroundList.length - 1){
+        backgroundList[0] = getListTwean(twoDBackgroundList[timeIndex][0], twoDBackgroundList[0][0], progress);
+        backgroundList[1] = getListTwean(twoDBackgroundList[timeIndex][1], twoDBackgroundList[0][1], progress);
+    }
+    else{
+        backgroundList[0] = getListTwean(twoDBackgroundList[timeIndex][0], twoDBackgroundList[timeIndex+1][0], progress);
+        backgroundList[1] = getListTwean(twoDBackgroundList[timeIndex][1], twoDBackgroundList[timeIndex+1][1], progress);
+    }
     for (var i = 0; i < colorList.length; i++) {
         
         if (timeIndex == twoDColorLists.length - 1){
         //to fade from last index/list to first index/list
-            colorList[i] = getListTwean(twoDColorLists[timeIndex][i], twoDColorLists[0][i], progress, 1);
-
-            //console.log(colorList[1]);
-            
+            colorList[i] = getListTwean(twoDColorLists[timeIndex][i], twoDColorLists[0][i], progress);
         }
         else {
             //console.log(timeIndex, progress);
-            colorList[i] = getListTwean(twoDColorLists[timeIndex][i], twoDColorLists[timeIndex + 1][i], progress, 1);
+            colorList[i] = getListTwean(twoDColorLists[timeIndex][i], twoDColorLists[timeIndex + 1][i], progress);
         }
     }
     
@@ -223,8 +244,10 @@ function drawOcean(){
     }
 }
 
-function drawBackgroundGradient(x, y, w, h, c1, c2){
+function drawBackgroundGradient(x, y, w, h, color1, color2){
     //refrences code from https://p5js.org/examples/color-linear-gradient.html
+    var c1 = color(color1.r, color1.g, color1.b);
+    var c2 = color(color2.r, color2.g, color2.b);
     strokeWeight(1);
     for (var i = y; i <= y+h; i++) {
       var inter = map(i, y, y+h, 0, 1);
@@ -246,8 +269,7 @@ function draw() {
     var timeProgress = getTimeProgress();
 
     updateList(timeProgress, timeIndex);
-
-    drawBackgroundGradient(0, 0, width, initialY+ 25, backgroundLightBlue, skyColor);
+    drawBackgroundGradient(0, 0, width, initialY+ 25, backgroundList[0], backgroundList[1]);
     drawOcean();
 
     
