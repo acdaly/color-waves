@@ -208,7 +208,7 @@ function draw() {
     }
         
     
-    drawBackgroundGradient(0, 0, width, height, skyColor, backgroundYellow);
+    drawBackgroundGradient(0, 0, width, initialY+ 25, skyColor, backgroundYellow);
     drawOcean();
 
     
