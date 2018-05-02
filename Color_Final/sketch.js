@@ -20,8 +20,8 @@ function setup() {
     curves = int(width/50);
     skyColor = color(170, 240, 255);
     create2DNoiseList();
-    background(skyColor);
-    console.log(curves +',' + t[0].length);
+    //background(skyColor);
+
     backgroundYellow = color(255, 240, 201)
     backgroundLightBlue = color( 78, 210, 255)
     
@@ -187,6 +187,7 @@ function drawOcean(){
 
 function drawBackgroundGradient(x, y, w, h, c1, c2){
     //refrences code from https://p5js.org/examples/color-linear-gradient.html
+    strokeWeight(1);
     for (var i = y; i <= y+h; i++) {
       var inter = map(i, y, y+h, 0, 1);
       var c = lerpColor(c1, c2, inter);
@@ -196,16 +197,21 @@ function drawBackgroundGradient(x, y, w, h, c1, c2){
 }
 
 function draw() {
+    //background(skyColor);
+
     if (width != windowWidth || height != windowHeight){
         width = windowWidth;
         height = windowHeight;
         createCanvas(width, height);
+
         curves = int(width/50);
     }
+        
     
-    
-    background(skyColor);
+    drawBackgroundGradient(0, 0, width, height, skyColor, backgroundYellow);
     drawOcean();
-    drawBackgroundGradient(0, 0, 500, 500, skyColor, backgroundYellow);
+
+    
+    
     
 }
