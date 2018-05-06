@@ -1,37 +1,118 @@
 var width;
 var height;
 var curves;
-var waveLayers = 13;
+var waveLayers = 11;
 var t=[];
 var initialY;
-var skyColor;
 
-var backgroundYellow;
-var backgroundLightBlue;
-var backgroundBlue;
+var colorBlue = {
+    'r': 10,
+    'g': 45,
+    'b': 250
+}
+
+var colorBabyBlue = {
+    'r': 71,
+    'g': 130,
+    'b': 224
+}
+
+var colorDarkBlue = {
+    'r': 28,
+    'g': 63,
+    'b': 119
+}
+
+var colorSkyBlue = {
+    'r': 170,
+    'g': 240,
+    'b': 255
+}
 
 
+var colorLightBlue = {
+    'r': 178,
+    'g': 210,
+    'b': 255
+}
 
+var colorGreen = {
+    'r': 50,
+    'g': 120,
+    'b': 100
+}
+
+var colorNavy = {
+    'r': 20,
+    'g': 60,
+    'b': 100
+}
+
+var colorDarkGreen = {
+    'r': 50,
+    'g': 100,
+    'b': 50
+}
+
+var colorPurple = {
+    'r': 177,
+    'g': 135,
+    'b': 188
+}
+
+var colorOrange = {
+    'r': 249,
+    'g': 204,
+    'b': 164
+}
+
+var colorRed = {
+    'r': 201,
+    'g': 92,
+    'b': 116
+}
+
+
+var colorTeal = {
+    'r': 76,
+    'g': 226,
+    'b': 239
+}
+
+var colorLightYellow = {
+    'r': 255,
+    'g': 240,
+    'b': 201
+}
+
+var colorBlack = {
+    'r': 3,
+    'g': 17,
+    'b': 40
+}
+
+
+var dayColorList = [colorBabyBlue, colorTeal, colorLightBlue, colorBlue];
+var sunsetColorList = [colorRed, colorPurple, colorOrange, colorLightBlue];
+var nightColorList = [colorDarkGreen, colorGreen, colorLightBlue, colorBlue];
+var deepNightColorList = [colorNavy, colorDarkBlue, colorPurple, colorBlue];
+
+var twoDColorLists = [deepNightColorList, dayColorList, sunsetColorList, nightColorList];
+var colorList = [colorGreen, colorTeal, colorLightBlue, colorBlue];
+
+var backgroundList = [colorLightBlue, colorSkyBlue];
+var twoDBackgroundList = [[colorBlack, colorDarkBlue], [colorLightBlue, colorSkyBlue], [colorBabyBlue, colorLightYellow], [colorGreen, colorPurple]];
 
 function setup() {
     width = windowWidth;
     height = windowHeight;
-    initialY = int(height*(2/3));
+    initialY = int(height*(2/3)) - 20;
     var cnv = createCanvas(width, height);
     cnv.parent('myContainer');
     
     curves = int(width/50);
-    skyColor = color(170, 240, 255);
     create2DNoiseList();
-    
 
-    backgroundYellow = color(255, 240, 201)
-    backgroundLightBlue = color( 78, 210, 255)
-    backgroundBlue = color(10, 45, 250);
-
-    backgroundSunset = [backgroundBlue, backgroundYellow];
-
-    
 }
 
 
@@ -49,83 +130,6 @@ function create2DNoiseList() {
         append(t, createNoiseList());
     }
 }
-
-var colorBlue = {
-    //blue
-    'r': 10,
-    'g': 45,
-    'b': 250
-}
-
-var colorSkyBlue = {
-    //light blue
-    'r': 170,
-    'g': 240,
-    'b': 255
-}
-
-
-var colorLightBlue = {
-    //light blue
-    'r': 178,
-    'g': 210,
-    'b': 255
-}
-
-var colorGreen = {
-     //dark green
-    'r': 50,
-    'g': 120,
-    'b': 200
-}
-
-var colorPurple = {
-    //purple
-    'r': 177,
-    'g': 135,
-    'b': 188
-}
-
-var colorOrange = {
-    // orange
-    'r': 249,
-    'g': 204,
-    'b': 164
-}
-
-var colorRed = {
-    //red
-    'r': 201,
-    'g': 92,
-    'b': 116
-}
-
-
-var colorTeal = {
-    //teal
-    'r': 76,
-    'g': 226,
-    'b': 239
-}
-
-var colorLightYellow = {
-    //teal
-    'r': 255,
-    'g': 240,
-    'b': 201
-}
-
-
-
-var dayColorList = [colorGreen, colorTeal, colorLightBlue, colorBlue];
-
-var sunsetColorList = [colorRed, colorOrange, colorLightYellow, colorLightBlue];
-
-var twoDColorLists = [dayColorList, sunsetColorList];
-var colorList = [colorGreen, colorTeal, colorLightBlue, colorBlue];
-
-var backgroundList = [colorLightBlue, colorSkyBlue];
-var twoDBackgroundList = [[colorLightBlue, colorSkyBlue], [colorBlue, colorLightYellow]];
 
 function getTwean(c1, c2, progress, z) {
     //progress is 0 to 1
@@ -156,26 +160,23 @@ function getListTwean(c1, c2, progress) {
     return twean;
 }
 
-function updateList(progress, timeIndex) {
-    console.log(backgroundList);
-
-    if (timeIndex == twoDBackgroundList.length - 1){
-        backgroundList[0] = getListTwean(twoDBackgroundList[timeIndex][0], twoDBackgroundList[0][0], progress);
-        backgroundList[1] = getListTwean(twoDBackgroundList[timeIndex][1], twoDBackgroundList[0][1], progress);
+function updateList(progress, oceanTimeIndex, backgroundTimeIndex) {
+    if (backgroundTimeIndex == twoDBackgroundList.length - 1){
+        backgroundList[0] = getListTwean(twoDBackgroundList[backgroundTimeIndex][0], twoDBackgroundList[0][0], progress);
+        backgroundList[1] = getListTwean(twoDBackgroundList[backgroundTimeIndex][1], twoDBackgroundList[0][1], progress);
     }
     else{
-        backgroundList[0] = getListTwean(twoDBackgroundList[timeIndex][0], twoDBackgroundList[timeIndex+1][0], progress);
-        backgroundList[1] = getListTwean(twoDBackgroundList[timeIndex][1], twoDBackgroundList[timeIndex+1][1], progress);
+        backgroundList[0] = getListTwean(twoDBackgroundList[backgroundTimeIndex][0], twoDBackgroundList[backgroundTimeIndex+1][0], progress);
+        backgroundList[1] = getListTwean(twoDBackgroundList[backgroundTimeIndex][1], twoDBackgroundList[backgroundTimeIndex+1][1], progress);
     }
     for (var i = 0; i < colorList.length; i++) {
         
-        if (timeIndex == twoDColorLists.length - 1){
+        if (oceanTimeIndex == twoDColorLists.length - 1){
         //to fade from last index/list to first index/list
-            colorList[i] = getListTwean(twoDColorLists[timeIndex][i], twoDColorLists[0][i], progress);
+            colorList[i] = getListTwean(twoDColorLists[oceanTimeIndex][i], twoDColorLists[0][i], progress);
         }
         else {
-            //console.log(timeIndex, progress);
-            colorList[i] = getListTwean(twoDColorLists[timeIndex][i], twoDColorLists[timeIndex + 1][i], progress);
+            colorList[i] = getListTwean(twoDColorLists[oceanTimeIndex][i], twoDColorLists[oceanTimeIndex + 1][i], progress);
         }
     }
     
@@ -183,11 +184,16 @@ function updateList(progress, timeIndex) {
 
 function getTimeProgress(){
     // returns progress (0.0 - 1.0), the percentage between the lists in twoDColorLists
-    return ((millis() / 100) % 100) * .01;
+    //return (hour() / 24) + (minute() / 1440); 
+    return ((millis() / 500) % 100) * .01;
+    
 }
 
-function getTimeIndex(){
-    return int(((millis() / 100) % (100 * twoDColorLists.length)) * .01);
+function getTimeIndex(list){
+    //console.log(int(((hour() / 24) + (minute() / 1440)) * list.length));
+    //return int(((hour() / 24) + (minute() / 1440)) * list.length); 
+    return int(((millis() / 500) % (100 * list.length)) * .01);
+    //return int(((second() / 3600) % (100 * list.length)) * .01);
 }
 
 
@@ -240,7 +246,7 @@ function drawOcean(){
         endShape();
         yOffset*=1.1 + 0.5 ;
         yPower*= 1.15;
-        xDistOffset*=1.5;
+        xDistOffset*=1.6;
     }
 }
 
@@ -265,10 +271,12 @@ function draw() {
 
         curves = int(width/50);
     }
-    var timeIndex = getTimeIndex();
-    var timeProgress = getTimeProgress();
+    var oceanTimeIndex = getTimeIndex(twoDColorLists);
+    var backgroundTimeIndex = getTimeIndex(twoDBackgroundList);
 
-    updateList(timeProgress, timeIndex);
+    var timeProgress = getTimeProgress();
+    //console.log(colorList);
+    updateList(timeProgress, oceanTimeIndex, backgroundTimeIndex);
     drawBackgroundGradient(0, 0, width, initialY+ 25, backgroundList[0], backgroundList[1]);
     drawOcean();
 
