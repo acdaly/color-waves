@@ -3,95 +3,32 @@ var height;
 var curves;
 var waveLayers = 11;
 var t=[];
+var oldTime = 0;
 var initialY;
 
-var colorBlue = {
-    'r': 10,
-    'g': 45,
-    'b': 250
+function RGB(r, g, b) {
+    this.r = r;
+    this.g = g;
+    this.b = b;
 }
 
-var colorBabyBlue = {
-    'r': 71,
-    'g': 130,
-    'b': 224
-}
+var colorBlue = new RGB(10, 45, 250);
+var colorBabyBlue = new RGB(71, 130, 224);
+var colorDarkBlue = new RGB(28, 63, 119);
+var colorSkyBlue = new RGB(170, 240, 255);
+var colorLightBlue = new RGB(178, 210, 255);
+var colorGreen = new RGB(50, 120, 100);
+var colorNavy = new RGB(20, 60, 100);
+var colorDarkGreen = new RGB(50, 100, 50);
+var colorPurple = new RGB(177, 135, 188);
+var colorOrange = new RGB(249, 204, 164);
+var colorRed = new RGB(201, 92, 116);
+var colorTeal = new RGB(76, 226, 239);
+var colorLightYellow = new RGB(255, 240, 201);
+var colorBlack = new RGB(3, 17, 40);
+var colorTrueRed = new RGB(255, 0, 0);
 
-var colorDarkBlue = {
-    'r': 28,
-    'g': 63,
-    'b': 119
-}
-
-var colorSkyBlue = {
-    'r': 170,
-    'g': 240,
-    'b': 255
-}
-
-
-var colorLightBlue = {
-    'r': 178,
-    'g': 210,
-    'b': 255
-}
-
-var colorGreen = {
-    'r': 50,
-    'g': 120,
-    'b': 100
-}
-
-var colorNavy = {
-    'r': 20,
-    'g': 60,
-    'b': 100
-}
-
-var colorDarkGreen = {
-    'r': 50,
-    'g': 100,
-    'b': 50
-}
-
-var colorPurple = {
-    'r': 177,
-    'g': 135,
-    'b': 188
-}
-
-var colorOrange = {
-    'r': 249,
-    'g': 204,
-    'b': 164
-}
-
-var colorRed = {
-    'r': 201,
-    'g': 92,
-    'b': 116
-}
-
-
-var colorTeal = {
-    'r': 76,
-    'g': 226,
-    'b': 239
-}
-
-var colorLightYellow = {
-    'r': 255,
-    'g': 240,
-    'b': 201
-}
-
-var colorBlack = {
-    'r': 3,
-    'g': 17,
-    'b': 40
-}
-
-
+var redList = [colorTrueRed, colorTrueRed, colorTrueRed, colorTrueRed]
 var dayColorList = [colorBabyBlue, colorTeal, colorLightBlue, colorBlue];
 var sunsetColorList = [colorRed, colorPurple, colorOrange, colorLightBlue];
 var nightColorList = [colorDarkGreen, colorGreen, colorLightBlue, colorBlue];
@@ -114,8 +51,6 @@ function setup() {
     create2DNoiseList();
 
 }
-
-
 
 function createNoiseList(){
     var pointList = [];
@@ -235,19 +170,20 @@ function drawOcean(){
             if (i==0){curveVertex(x, y + 10);}
             curveVertex(x, y);
             // strokeWeight(5);
-            // point(x, y);
-            t[z][i] += .005;
-            
+            point(x, y);
+            t[z][i] += (millis() - oldTime) / 4000
         }
+        
         // strokeWeight(1);
         curveVertex(x, y);
         curveVertex(x, height);
         curveVertex(x, height);
         endShape();
-        yOffset*=1.1 + 0.5 ;
+        yOffset*=1.09 + 0.5 ;
         yPower*= 1.15;
         xDistOffset*=1.6;
     }
+    oldTime = millis();
 }
 
 function drawBackgroundGradient(x, y, w, h, color1, color2){
@@ -268,17 +204,16 @@ function draw() {
         width = windowWidth;
         height = windowHeight;
         createCanvas(width, height);
-
         curves = int(width/50);
     }
     var oceanTimeIndex = getTimeIndex(twoDColorLists);
     var backgroundTimeIndex = getTimeIndex(twoDBackgroundList);
-
     var timeProgress = getTimeProgress();
-    //console.log(colorList);
     updateList(timeProgress, oceanTimeIndex, backgroundTimeIndex);
-    drawBackgroundGradient(0, 0, width, initialY+ 25, backgroundList[0], backgroundList[1]);
-    drawOcean();
+    if (millis() > oldTime +20){
+        drawBackgroundGradient(0, 0, width, initialY+ 25, backgroundList[0], backgroundList[1]);
+        drawOcean();
+    }
 
     
     
